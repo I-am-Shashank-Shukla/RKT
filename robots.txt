@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /bill.html
+Disallow: /driver.html
+Disallow: /admin.html
+Disallow: /sql/
+Disallow: /tests/
+
+Allow: /
+Allow: /index.html
+Allow: /assets/

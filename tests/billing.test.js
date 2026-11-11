@@ -1,0 +1,20 @@
+// Run: node tests/billing.test.js   (uses SAMPLE rates, not your real business rates)
+const fs=require('fs'),assert=require('assert');
+const src=fs.readFileSync(__dirname+'/../assets/app.js','utf8');
+const calc=new Function(src.match(/function calc[\s\S]*?\n(?=const itemName)/)[0]+';return calc')();
+const R={outKm:10,minKm:200,bhatta:300,night:200,l8:2000,l12:3000,xKm:12,xHr:100,owKm:15,wait:100};
+const base={start:1000,end:1100,days:1,hours:8,nights:0,wait:0,toll:0,other:0,fixed:0,limit:0,adv:0};
+const T=(n,f,x)=>{try{const c=calc({...base,...f},R);assert.strictEqual(c.total,x);console.log('PASS',n)}catch(e){console.log('FAIL',n,e.message);process.exitCode=1}};
+T('outstation uses minimum km per day',{type:'out'},2000+300);
+T('outstation actual km above minimum',{type:'out',end:1400,days:1},4000+300);
+T('outstation 2 days minimum',{type:'out',days:2},4000+600);
+T('local 8h within package',{type:'l8',end:1080},2000);
+T('local 8h extra km and hours',{type:'l8',end:1100+30,hours:10},2000+50*12+200);
+T('local 12h within package',{type:'l12',end:1100,hours:12},3000);
+T('one-way per km',{type:'ow'},1500);
+T('fixed package no limit',{type:'fixed',fixed:5000},5000);
+T('fixed package extra km',{type:'fixed',fixed:5000,limit:80},5000+20*12);
+T('night, waiting, toll and other add on',{type:'ow',nights:1,wait:2,toll:150,other:50},1500+200+200+150+50);
+T('advance does not change total',{type:'ow',adv:500},1500);
+const c=calc({...base,type:'ow',adv:2000},R);assert.strictEqual(c.bal,0);console.log('PASS balance never negative');
+assert.strictEqual(calc({...base,type:'ow',end:900},R).km,0);console.log('PASS closing below opening gives 0 km');
