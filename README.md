@@ -44,19 +44,6 @@ All vendor JS lives in `assets/vendor/` — no CDN dependency at runtime.
 
 ---
 
-## Business details (hardcoded)
-
-| Field | Value |
-|---|---|
-| Owner | Ashok Kumar Shukla |
-| Phones | 9935792953 · 7651906520 |
-| UPI | ashokshuklaarti@okicici |
-| Car | UP 35 CE 0371 |
-| Driver | Anil |
-| Address | Kanpur Nagar, Uttar Pradesh |
-
----
-
 ## Supabase setup
 
 Project URL: `https://tcyqglzscrcujkfiijmp.supabase.co`  
